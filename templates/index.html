@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Download Video</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --text: #1d1d1f;
+      --secondary: #6e6e73;
+      --border: rgba(0, 0, 0, 0.08);
+      --blue: #0071e3;
+      --blue-hover: #0077ed;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 50% -10%, rgba(0, 113, 227, 0.08), transparent 40%), #f5f5f7;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      width: 100%;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #1d1d1f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .nav-label {
+      font-size: 14px;
+      color: var(--secondary);
+    }
+
+    main {
+      width: 100%;
+      max-width: 900px;
+      margin: auto;
+      padding: 90px 24px 120px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--blue);
+      margin-bottom: 18px;
+      letter-spacing: 0.2px;
+    }
+
+    h1 {
+      font-size: clamp(48px, 8vw, 82px);
+      line-height: 0.98;
+      letter-spacing: -4px;
+      font-weight: 700;
+      margin-bottom: 28px;
+      background: linear-gradient(180deg, #1d1d1f 10%, #515154 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      max-width: 590px;
+      margin: 0 auto;
+      font-size: 21px;
+      line-height: 1.45;
+      color: var(--secondary);
+      letter-spacing: -0.3px;
+      margin-bottom: 55px;
+    }
+
+    .download-card {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 28px;
+      padding: 34px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      text-align: left;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #424245;
+      margin-bottom: 12px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      background: #f5f5f7;
+      border: 1px solid transparent;
+      border-radius: 16px;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .input-wrapper:focus-within {
+      background: #fff;
+      border-color: rgba(0, 113, 227, 0.45);
+      box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.10);
+    }
+
+    .link-icon {
+      width: 20px;
+      height: 20px;
+      margin-left: 18px;
+      color: #86868b;
+      flex-shrink: 0;
+    }
+
+    input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      padding: 19px 18px;
+      font-family: inherit;
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    input::placeholder {
+      color: #86868b;
+    }
+
+    .clear-button {
+      display: none;
+      width: 28px;
+      height: 28px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 50%;
+      background: #d2d2d7;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .clear-button:hover {
+      background: #b8b8bd;
+    }
+
+    .download-button {
+      width: 100%;
+      margin-top: 18px;
+      border: none;
+      border-radius: 16px;
+      padding: 18px 24px;
+      background: var(--blue);
+      color: white;
+      font-family: inherit;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 20px rgba(0, 113, 227, 0.22);
+      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .download-button:hover {
+      background: var(--blue-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 26px rgba(0, 113, 227, 0.28);
+    }
+
+    .download-button:active {
+      transform: scale(0.985);
+    }
+
+    .download-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .download-icon {
+      width: 19px;
+      height: 19px;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status {
+      display: none;
+      margin-top: 22px;
+      padding: 16px 18px;
+      border-radius: 14px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .status.success {
+      display: block;
+      background: #eaf8ef;
+      color: #16723a;
+    }
+
+    .status.error {
+      display: block;
+      background: #fff0f0;
+      color: #c62828;
+    }
+
+    .status.loading {
+      display: block;
+      background: #f0f5ff;
+      color: #315f9e;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .feature {
+      padding: 22px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+
+    .feature-icon {
+      width: 38px;
+      height: 38px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      background: #f0f0f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1d1d1f;
+    }
+
+    .feature h3 {
+      font-size: 14px;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .feature p {
+      font-size: 13px;
+      color: var(--secondary);
+      line-height: 1.4;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      font-size: 12px;
+      color: #86868b;
+    }
+
+    @media (max-width: 650px) {
+      nav { padding: 0 20px; }
+      .nav-label { display: none; }
+      main { padding: 70px 18px 80px; }
+      h1 { font-size: 52px; letter-spacing: -2.8px; }
+      .subtitle { font-size: 18px; margin-bottom: 38px; }
+      .download-card { padding: 22px; border-radius: 23px; }
+      .features { grid-template-columns: 1fr; gap: 12px; }
+      .feature { display: flex; align-items: center; text-align: left; gap: 14px; }
+      .feature-icon { margin: 0; flex-shrink: 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="logo">
+      <div class="logo-icon">↓</div>
+      VideoDrop
+    </div>
+    <div class="nav-label">Simple. Fast. Private.</div>
+  </nav>
+
+  <main>
+    <div class="eyebrow">VIDEO DOWNLOADER</div>
+    <h1>Your video.<br>In one click.</h1>
+    <p class="subtitle">
+      Paste a video link below and download it instantly. 
+      Simple, clean and designed to stay out of your way.
+    </p>
+
+    <div class="download-card">
+      <label class="input-label" for="videoUrl">Video URL</label>
+      
+      <div class="input-wrapper">
+        <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M10 13a5 5 0 0 0 7.07.07l2-2a5 5 0 0 0-7.07-7.07l-1.15 1.15"/>
+          <path d="M14 11a5 5 0 0 0-7.07-.07l-2 2A5 5 0 0 0 7 20l1.15-1.15"/>
+        </svg>
+
+        <input type="url" id="videoUrl" placeholder="Paste your video link here" autocomplete="off" spellcheck="false" />
+
+        <button class="clear-button" id="clearButton" type="button" aria-label="Clear URL">×</button>
+      </div>
+
+      <button class="download-button" id="downloadButton" type="button">
+        <svg class="download-icon" id="downloadIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v12" />
+          <path d="m7 10 5 5 5-5" />
+          <path d="M5 21h14" />
+        </svg>
+        <span id="buttonText">Download Video</span>
+      </button>
+
+      <div class="status" id="status" role="status"></div>
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 3v12" /><path d="m7 10 5 5 5-5" /><path d="M5 21h14" />
+          </svg>
+        </div>
+        <div>
+          <h3>Easy Download</h3>
+          <p>Paste your link and download.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 3 5 6v5c0 4.5 3 8.5 7 10 4-1.5 7-5.5 7-10V6l-7-3Z" /><path d="m9 12 2 2 4-4" />
+          </svg>
+        </div>
+        <div>
+          <h3>Private</h3>
+          <p>Your links stay private.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z" />
+          </svg>
+        </div>
+        <div>
+          <h3>Fast</h3>
+          <p>Built for a quick experience.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>© 2026 VideoDrop</footer>
+
+  <script>
+    const videoUrl = document.getElementById("videoUrl");
+    const downloadButton = document.getElementById("downloadButton");
+    const clearButton = document.getElementById("clearButton");
+    const buttonText = document.getElementById("buttonText");
+    const downloadIcon = document.getElementById("downloadIcon");
+    const status = document.getElementById("status");
+
+    videoUrl.addEventListener("input", () => {
+      if (videoUrl.value.trim() !== "") {
+        clearButton.style.display = "flex";
+      } else {
+        clearButton.style.display = "none";
+      }
+      status.className = "status";
+      status.textContent = "";
+    });
+
+    clearButton.addEventListener("click", () => {
+      videoUrl.value = "";
+      clearButton.style.display = "none";
+      videoUrl.focus();
+      status.className = "status";
+      status.textContent = "";
+    });
+
+    downloadButton.addEventListener("click", async () => {
+      const url = videoUrl.value.trim();
+
+      if (!url) {
+        showStatus("Please paste a video URL first.", "error");
+        videoUrl.focus();
+        return;
+      }
+
+      try {
+        new URL(url);
+      } catch {
+        showStatus("Please enter a valid video URL.", "error");
+        videoUrl.focus();
+        return;
+      }
+
+      setLoading(true);
+      showStatus("Connecting to downloader...", "loading");
+
+      try {
+        const response = await pywebview.api.download_video(url);
+        
+        if (response.status === "error") {
+          setLoading(false);
+          showStatus(response.message, "error");
+        } else {
+          showStatus("Download started! Check your 'Videos/VideoDrop' folder.", "loading");
+          setTimeout(() => {
+            setLoading(false);
+            showStatus("Download initiated successfully!", "success");
+            videoUrl.value = "";
+            clearButton.style.display = "none";
+          }, 2000);
+        }
+      } catch (err) {
+        setLoading(false);
+        showStatus("An unexpected error occurred.", "error");
+      }
+    });
+
+    function setLoading(loading) {
+      downloadButton.disabled = loading;
+      if (loading) {
+        downloadIcon.style.display = "none";
+        buttonText.textContent = "Processing...";
+        const spinner = document.createElement("span");
+        spinner.className = "spinner";
+        spinner.id = "spinner";
+        downloadButton.prepend(spinner);
+      } else {
+        const spinner = document.getElementById("spinner");
+        if (spinner) { spinner.remove(); }
+        downloadIcon.style.display = "block";
+        buttonText.textContent = "Download Video";
+      }
+    }
+
+    function showStatus(message, type) {
+      status.textContent = message;
+      status.className = "status " + type;
+    }
+  </script>
+</body>
+</html>
